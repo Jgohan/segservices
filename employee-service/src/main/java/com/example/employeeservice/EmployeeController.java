@@ -1,7 +1,10 @@
 package com.example.employeeservice;
 
 import com.example.employeeservice.model.Employee;
-
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,45 +15,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/employees")
+@RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
-
-    EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
+  private final EmployeeService employeeService;
 
 
-    @PostMapping
-    ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
-        return employeeService.createEmployee(newEmployee);
-    }
+  @PostMapping
+  ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
+    var response = employeeService.createEmployee(newEmployee);
+    log.info("Create employee - " + response.getBody());
+    return response;
+  }
 
-    @GetMapping
-    ResponseEntity<List<Employee>> getEmployees() {
-        return employeeService.getEmployees();
-    }
+  @GetMapping
+  ResponseEntity<List<Employee>> getEmployees() {
+    log.info("Get all employees");
+    return employeeService.getEmployees();
+  }
 
-    @GetMapping("/{name}")
-    ResponseEntity<Employee> getEmployee(@PathVariable String name) {
-        return employeeService.getEmployee(name);
-    }
+  @GetMapping("/{id}")
+  ResponseEntity<Employee> getEmployee(@PathVariable UUID id) {
+    log.info("Get employee " + id);
+    return employeeService.getEmployee(id);
+  }
 
-    @PutMapping("/{name}")
-    ResponseEntity<String> updateEmployee(
-        @PathVariable String name,
-        @RequestBody Employee updatedEmployee
-    ) {
-        return employeeService.updateEmployee(updatedEmployee);
-    }
+  @PutMapping("/{id}")
+  ResponseEntity<String> updateEmployee(
+      @PathVariable UUID id,
+      @RequestBody Employee updatedEmployee
+  ) {
+    var response = employeeService.updateEmployee(id, updatedEmployee);
+    log.info("Update employee - " + response.getBody());
+    return response;
+  }
 
-    @DeleteMapping("/{name}")
-    ResponseEntity<String> deleteEmployee(@PathVariable String name) {
-        return employeeService.deleteEmployee(name);
-    }
+  @DeleteMapping("/{id}")
+  ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
+    var response = employeeService.deleteEmployee(id);
+    log.info("Delete employee - " + response.getBody());
+    return response;
+  }
 
 }

@@ -1,16 +1,25 @@
 package com.example.employeeservice.model;
 
-import lombok.AllArgsConstructor;
+import com.example.employeeservice.entity.EmployeeEntity;
+import java.util.UUID;
 import lombok.Builder;
-import lombok.Data;
 import lombok.experimental.Accessors;
 
-@AllArgsConstructor
-@Data
 @Builder
 @Accessors(chain = true)
-public class Employee {
-    private String name;
-    private String surname;
-    private String position;
+public record Employee(
+    UUID id,
+    String name,
+    String surname,
+    String position
+) {
+
+  public EmployeeEntity toEntity() {
+    return EmployeeEntity.builder()
+        .id(UUID.randomUUID())
+        .name(name)
+        .surname(surname)
+        .position(position)
+        .build();
+  }
 }
