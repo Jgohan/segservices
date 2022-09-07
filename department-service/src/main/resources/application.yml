@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:department-service-db
+    url: jdbc:h2:mem:department_service_db
     username: department_admin
     password: secret
     driver-class-name: org.h2.Driver
@@ -12,7 +12,7 @@ spring:
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    generate-sql: false
+    generate-ddl: false
     show_sql: true
     hibernate:
       ddl-auto: validate
