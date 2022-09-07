@@ -47,7 +47,8 @@ class DepartmentService(
 
     @Transactional
     fun updateDepartment(
-        id: UUID, updatedDepartment: Department
+        id: UUID,
+        updatedDepartment: Department
     ): ResponseEntity<String> {
         return updatedDepartment.run {
             when {
