@@ -2,7 +2,6 @@ HELP.md
 build/
 .gradle
 gradle
-gradle.properties
 gradlew
 gradlew.bat
 !**/src/main/**/build/
