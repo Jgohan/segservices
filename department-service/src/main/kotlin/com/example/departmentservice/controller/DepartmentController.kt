@@ -1,5 +1,6 @@
-package com.example.departmentservice
+package com.example.departmentservice.controller
 
+import com.example.departmentservice.service.DepartmentService
 import com.example.departmentservice.model.Department
 import com.example.departmentservice.util.lazyLogger
 import org.springframework.beans.factory.annotation.Autowired

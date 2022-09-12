@@ -1,4 +1,4 @@
-package com.example.departmentservice
+package com.example.departmentservice.repository
 
 import com.example.departmentservice.entity.DepartmentEntity
 import org.springframework.data.jpa.repository.Query

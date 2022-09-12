@@ -1,6 +1,7 @@
-package com.example.departmentservice
+package com.example.departmentservice.service
 
 import com.example.departmentservice.model.Department
+import com.example.departmentservice.repository.DepartmentRepository
 import com.example.departmentservice.util.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
