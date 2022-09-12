@@ -10,9 +10,8 @@ abstract class AbstractEntity<ID>(
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other !is AbstractEntity<*>) return false
 
-        other as AbstractEntity<*>
         if (id != other.id) return false
 
         return true
