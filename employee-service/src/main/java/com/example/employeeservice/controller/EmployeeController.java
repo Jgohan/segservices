@@ -1,6 +1,7 @@
-package com.example.employeeservice;
+package com.example.employeeservice.controller;
 
 import com.example.employeeservice.model.Employee;
+import com.example.employeeservice.service.EmployeeService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -25,26 +26,26 @@ public class EmployeeController {
 
 
   @PostMapping
-  ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
+  public ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
     var response = employeeService.createEmployee(newEmployee);
     log.info("Create employee - " + response.getBody());
     return response;
   }
 
   @GetMapping
-  ResponseEntity<List<Employee>> getEmployees() {
+  public ResponseEntity<List<Employee>> getEmployees() {
     log.info("Get all employees");
     return employeeService.getEmployees();
   }
 
   @GetMapping("/{id}")
-  ResponseEntity<Employee> getEmployee(@PathVariable UUID id) {
+  public ResponseEntity<Employee> getEmployee(@PathVariable UUID id) {
     log.info("Get employee " + id);
     return employeeService.getEmployee(id);
   }
 
   @PutMapping("/{id}")
-  ResponseEntity<String> updateEmployee(
+  public ResponseEntity<String> updateEmployee(
       @PathVariable UUID id,
       @RequestBody Employee updatedEmployee
   ) {
@@ -54,7 +55,7 @@ public class EmployeeController {
   }
 
   @DeleteMapping("/{id}")
-  ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
+  public ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
     var response = employeeService.deleteEmployee(id);
     log.info("Delete employee - " + response.getBody());
     return response;

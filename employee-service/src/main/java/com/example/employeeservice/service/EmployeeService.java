@@ -1,5 +1,6 @@
-package com.example.employeeservice;
+package com.example.employeeservice.service;
 
+import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.model.Employee;
 import java.util.List;
@@ -21,12 +22,12 @@ public class EmployeeService {
 
 
   @Transactional
-  ResponseEntity<String> createEmployee(Employee employee) {
+  public ResponseEntity<String> createEmployee(Employee employee) {
     employeeRepository.save(employeeMapper.toEntity(employee));
     return new ResponseEntity<>("Employee created", HttpStatus.CREATED);
   }
 
-  ResponseEntity<List<Employee>> getEmployees() {
+  public ResponseEntity<List<Employee>> getEmployees() {
     var employees = StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
         .map(employeeMapper::toModel).collect(Collectors.toList());
 
@@ -37,14 +38,14 @@ public class EmployeeService {
     return new ResponseEntity<>(employees, HttpStatus.OK);
   }
 
-  ResponseEntity<Employee> getEmployee(UUID id) {
+  public ResponseEntity<Employee> getEmployee(UUID id) {
     return employeeRepository.findById(id)
         .map(entity -> new ResponseEntity<>(employeeMapper.toModel(entity), HttpStatus.OK))
         .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
   }
 
   @Transactional
-  ResponseEntity<String> updateEmployee(
+  public ResponseEntity<String> updateEmployee(
       UUID id,
       Employee updatedEmployee
   ) {
@@ -59,7 +60,7 @@ public class EmployeeService {
   }
 
   @Transactional
-  ResponseEntity<String> deleteEmployee(UUID id) {
+  public ResponseEntity<String> deleteEmployee(UUID id) {
     if (employeeRepository.existsById(id)) {
       employeeRepository.deleteById(id);
       return new ResponseEntity<>("Employee " + id + " was deleted", HttpStatus.OK);

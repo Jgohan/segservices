@@ -1,4 +1,4 @@
-package com.example.employeeservice;
+package com.example.employeeservice.repository;
 
 import com.example.employeeservice.entity.EmployeeEntity;
 import java.util.UUID;
