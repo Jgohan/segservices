@@ -1,6 +1,6 @@
 package com.example.employeeservice;
 
-import com.example.employeeservice.entity.EmployeeEntity;
+import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.model.Employee;
 import java.util.List;
 import java.util.UUID;
@@ -17,29 +17,29 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
 
   private final EmployeeRepository employeeRepository;
+  private final EmployeeMapper employeeMapper;
 
 
   @Transactional
   ResponseEntity<String> createEmployee(Employee employee) {
-    var createdEmployee = employeeRepository.save(employee.toEntity());
+    employeeRepository.save(employeeMapper.toEntity(employee));
     return new ResponseEntity<>("Employee created", HttpStatus.CREATED);
   }
 
   ResponseEntity<List<Employee>> getEmployees() {
     var employees = StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
-        .map(EmployeeEntity::toModel)
-        .collect(Collectors.toList());
+        .map(employeeMapper::toModel).collect(Collectors.toList());
 
     if (employees.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    } else {
-      return new ResponseEntity<>(employees, HttpStatus.OK);
     }
+
+    return new ResponseEntity<>(employees, HttpStatus.OK);
   }
 
   ResponseEntity<Employee> getEmployee(UUID id) {
     return employeeRepository.findById(id)
-        .map(entity -> new ResponseEntity<>(entity.toModel(), HttpStatus.OK))
+        .map(entity -> new ResponseEntity<>(employeeMapper.toModel(entity), HttpStatus.OK))
         .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
   }
 
@@ -52,8 +52,10 @@ public class EmployeeService {
         .map(entity -> {
           employeeRepository.save(entity.updateFrom(updatedEmployee));
           return new ResponseEntity<>("Employee " + id + " was updated", HttpStatus.OK);
-        }).orElseGet(
-            () -> new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT));
+        })
+        .orElseGet(() ->
+            new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT)
+        );
   }
 
   @Transactional
@@ -61,9 +63,9 @@ public class EmployeeService {
     if (employeeRepository.existsById(id)) {
       employeeRepository.deleteById(id);
       return new ResponseEntity<>("Employee " + id + " was deleted", HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
     }
+
+    return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
   }
 
 }

@@ -26,15 +26,6 @@ public class EmployeeEntity extends AbstractEntity<UUID> {
   private String position;
 
 
-  public Employee toModel() {
-    return Employee.builder()
-        .id(id)
-        .name(name)
-        .surname(surname)
-        .position(position)
-        .build();
-  }
-
   public EmployeeEntity updateFrom(Employee model) {
     var name = model.name();
     if (nonNull(name)) {
