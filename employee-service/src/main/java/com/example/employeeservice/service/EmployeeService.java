@@ -1,5 +1,8 @@
 package com.example.employeeservice.service;
 
+import static java.util.Objects.nonNull;
+
+import com.example.employeeservice.entity.EmployeeEntity;
 import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.model.Employee;
@@ -51,7 +54,7 @@ public class EmployeeService {
   ) {
     return employeeRepository.findById(id)
         .map(entity -> {
-          employeeRepository.save(entity.updateFrom(updatedEmployee));
+          employeeRepository.save(updateEntityFromModel(entity, updatedEmployee));
           return new ResponseEntity<>("Employee " + id + " was updated", HttpStatus.OK);
         })
         .orElseGet(() ->
@@ -67,6 +70,28 @@ public class EmployeeService {
     }
 
     return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
+  }
+
+  private EmployeeEntity updateEntityFromModel(
+      EmployeeEntity entity,
+      Employee model
+  ) {
+    var name = model.name();
+    if (nonNull(name)) {
+      entity.setName(name);
+    }
+
+    var surname = model.surname();
+    if (nonNull(surname)) {
+      entity.setSurname(surname);
+    }
+
+    var position = model.position();
+    if (nonNull(surname)) {
+      entity.setPosition(position);
+    }
+
+    return entity;
   }
 
 }

@@ -1,8 +1,5 @@
 package com.example.employeeservice.entity;
 
-import static java.util.Objects.nonNull;
-
-import com.example.employeeservice.model.Employee;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -25,24 +22,5 @@ public class EmployeeEntity extends AbstractEntity<UUID> {
   private String surname;
   private String position;
 
-
-  public EmployeeEntity updateFrom(Employee model) {
-    var name = model.name();
-    if (nonNull(name)) {
-      setName(name);
-    }
-
-    var surname = model.surname();
-    if (nonNull(surname)) {
-      setSurname(surname);
-    }
-
-    var position = model.position();
-    if (nonNull(surname)) {
-      setPosition(position);
-    }
-
-    return this;
-  }
 }
 
