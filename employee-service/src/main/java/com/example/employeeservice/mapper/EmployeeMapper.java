@@ -20,9 +20,9 @@ public class EmployeeMapper {
   public EmployeeEntity toEntity(Employee model) {
     return EmployeeEntity.builder()
         .id(UUID.randomUUID())
-        .name(model.name())
-        .surname(model.surname())
-        .position(model.position())
+        .name(model.getName())
+        .surname(model.getSurname())
+        .position(model.getPosition())
         .build();
   }
 

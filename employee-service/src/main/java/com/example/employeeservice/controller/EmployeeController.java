@@ -1,5 +1,6 @@
 package com.example.employeeservice.controller;
 
+import com.example.employeeservice.api.EmployeesApi;
 import com.example.employeeservice.model.Employee;
 import com.example.employeeservice.service.EmployeeService;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employees")
 @RequiredArgsConstructor
 @Slf4j
-public class EmployeeController {
+public class EmployeeController implements EmployeesApi {
 
   private final EmployeeService employeeService;
 

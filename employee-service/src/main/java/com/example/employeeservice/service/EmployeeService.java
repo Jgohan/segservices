@@ -76,17 +76,17 @@ public class EmployeeService {
       EmployeeEntity entity,
       Employee model
   ) {
-    var name = model.name();
+    var name = model.getName();
     if (nonNull(name)) {
       entity.setName(name);
     }
 
-    var surname = model.surname();
+    var surname = model.getSurname();
     if (nonNull(surname)) {
       entity.setSurname(surname);
     }
 
-    var position = model.position();
+    var position = model.getPosition();
     if (nonNull(surname)) {
       entity.setPosition(position);
     }

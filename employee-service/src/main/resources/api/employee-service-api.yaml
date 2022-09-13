@@ -1,0 +1,165 @@
+openapi: "3.0.0"
+
+info:
+  title: Employee service
+  version: 0.1.0
+
+paths:
+  /employees:
+    post:
+      summary: Create employee
+      operationId: createEmployee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+      responses:
+        '201':
+          description: Successfully created
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+    get:
+      summary: Get all employees
+      operationId: getEmployees
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employees"
+        '204':
+          description: No content
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+
+  /employees/{id}:
+    get:
+      summary: Get specific employee
+      operationId: getEmployee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Specific employee
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        '204':
+          description: No content
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+    put:
+      summary: Update specific employee
+      operationId: updateEmployee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            plain/text:
+              schema:
+                type: string
+        '409':
+          description: Conflict
+          content:
+            plain/text:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+    delete:
+      summary: Delete specific employee
+      operationId: deleteEmployee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            plain/text:
+              schema:
+                type: string
+        '409':
+          description: Conflict
+          content:
+            plain/text:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        surname: { type: string }
+        position: { type: string }
+
+    Employees:
+      type: array
+      items:
+        $ref: "#/components/schemas/Employee"
+
+    ServerErrorResponse:
+      type: object
+      properties:
+        timestamp: { type: string, format: date-time }
+        status: { type: integer }
+        error: { type: string }
+        path: { type: string }

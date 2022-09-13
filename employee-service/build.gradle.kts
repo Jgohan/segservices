@@ -10,6 +10,7 @@ plugins {
     java
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependencyManagement)
+    alias(libs.plugins.openapi.generator)
 }
 
 configurations {
@@ -18,10 +19,33 @@ configurations {
     }
 }
 
+openApiGenerate {
+    generatorName.set("spring")
+    inputSpec.set("$projectDir/src/main/resources/api/employee-service-api.yaml")
+    outputDir.set("$buildDir/generated/api")
+    apiPackage.set("com.example.employeeservice.api")
+    modelPackage.set("com.example.employeeservice.model")
+    configOptions.set(mapOf(
+        "dateLibrary" to "java8",
+        "interfaceOnly" to "true",
+        "useSpringController" to "false",
+        "additionalModelTypeAnnotations" to "@lombok.Builder " +
+                                            "@lombok.NoArgsConstructor " +
+                                            "@lombok.AllArgsConstructor"
+    ))
+}
+
+sourceSets {
+    main {
+        java.srcDir("build/generated/api/src/main/java")
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.liquibase:liquibase-core")
+    libs.bundles.openapi.codegen.util
 
     runtimeOnly("org.postgresql:postgresql")
 
