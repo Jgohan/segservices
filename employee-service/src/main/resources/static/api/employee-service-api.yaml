@@ -7,6 +7,8 @@ info:
 paths:
   /employees:
     post:
+      tags:
+        - Employee service
       summary: Create employee
       operationId: createEmployee
       requestBody:
@@ -29,6 +31,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServerErrorResponse"
     get:
+      tags:
+        - Employee service
       summary: Get all employees
       operationId: getEmployees
       responses:
@@ -49,6 +53,8 @@ paths:
 
   /employees/{id}:
     get:
+      tags:
+        - Employee service
       summary: Get specific employee
       operationId: getEmployee
       parameters:
@@ -75,6 +81,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServerErrorResponse"
     put:
+      tags:
+        - Employee service
       summary: Update specific employee
       operationId: updateEmployee
       parameters:
@@ -111,6 +119,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServerErrorResponse"
     delete:
+      tags:
+        - Employee service
       summary: Delete specific employee
       operationId: deleteEmployee
       parameters:

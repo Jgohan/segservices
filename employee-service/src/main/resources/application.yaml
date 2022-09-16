@@ -16,3 +16,9 @@ spring:
       ddl-auto: validate
   liquibase:
     enabled: true
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: api/employee-service-api.yaml
