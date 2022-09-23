@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeMapper {
+public class EmployeeMapper implements ModelEntityMapper<Employee, EmployeeEntity> {
 
   public Employee toModel(EmployeeEntity entity) {
     return Employee.builder()
