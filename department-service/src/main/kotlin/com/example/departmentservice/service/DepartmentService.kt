@@ -1,5 +1,6 @@
 package com.example.departmentservice.service
 
+import com.example.departmentservice.mapper.DepartmentMapper
 import com.example.departmentservice.model.Department
 import com.example.departmentservice.repository.DepartmentRepository
 import com.example.departmentservice.util.Response
@@ -11,7 +12,8 @@ import java.util.UUID
 
 @Service
 class DepartmentService(
-    @Autowired private val departmentRepository: DepartmentRepository
+    @Autowired private val departmentRepository: DepartmentRepository,
+    @Autowired private val departmentMapper: DepartmentMapper
 ) {
 
     @Transactional
@@ -20,14 +22,14 @@ class DepartmentService(
             if (departmentRepository.existsByName(name)) {
                 Response.conflict("Department $name already exists")
             } else {
-                departmentRepository.save(newDepartment.toEntity())
+                departmentRepository.save(departmentMapper.toEntity(newDepartment))
                 Response.created("Department $name was created")
             }
         }
     }
 
     fun getDepartments(): ResponseEntity<Iterable<Department>?> {
-        val departments = departmentRepository.findAll().map { it.toModel() }
+        val departments = departmentRepository.findAll().map(departmentMapper::toModel)
 
         return if (departments.isNotEmpty()) {
             Response.ok(departments)
@@ -40,7 +42,7 @@ class DepartmentService(
         val result = departmentRepository.findById(id)
 
         return if (result.isPresent) {
-            Response.ok(result.get().toModel())
+            Response.ok(departmentMapper.toModel(result.get()))
         } else {
             Response.noContent(null)
         }
@@ -60,7 +62,7 @@ class DepartmentService(
                     Response.conflict("Department $name already exists")
                 }
                 else -> {
-                    departmentRepository.save(updatedDepartment.toEntity(id))
+                    departmentRepository.save(departmentMapper.toEntity(updatedDepartment, id))
                     Response.ok("Department $id was edited")
                 }
             }
