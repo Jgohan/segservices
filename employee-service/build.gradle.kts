@@ -46,10 +46,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.liquibase:liquibase-core")
     implementation(libs.bundles.openapi.codegen.util)
+    implementation(libs.mapstruct)
 
     runtimeOnly("org.postgresql:postgresql")
 
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor(libs.bundles.mapstruct.annotationProcessors)
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

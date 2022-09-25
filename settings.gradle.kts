@@ -22,9 +22,12 @@ dependencyResolutionManagement {
             val javaxValidation = version("javax.validation", "2.0.1.Final")
             val springdoc = version("springdoc", "1.6.11")
 
+            val mapstruct = version("mapstruct", "1.5.2.Final")
+            val lombokMapstruct = version("lombok.mapstruct", "0.2.0")
 
-            plugin("kotlin.jvm", "org.jetbrains.kotlin.jvm") .versionRef(kotlin)
-            plugin("kotlin.spring", "org.jetbrains.kotlin.plugin.spring") .versionRef(kotlin)
+
+            plugin("kotlin.jvm", "org.jetbrains.kotlin.jvm").versionRef(kotlin)
+            plugin("kotlin.spring", "org.jetbrains.kotlin.plugin.spring").versionRef(kotlin)
             plugin("kotlin.jpa", "org.jetbrains.kotlin.plugin.jpa").versionRef(kotlin)
 
             plugin("spring.boot", "org.springframework.boot" ).versionRef(springBoot)
@@ -56,6 +59,14 @@ dependencyResolutionManagement {
                     "javax.validation",
                     "springdoc"
                 )
+            )
+
+            library("mapstruct", "org.mapstruct", "mapstruct").versionRef(mapstruct)
+            library("mapstruct.processor", "org.mapstruct", "mapstruct-processor").versionRef(mapstruct)
+            library("lombok.mapstruct", "org.projectlombok", "lombok-mapstruct-binding")
+                .versionRef(lombokMapstruct)
+            bundle("mapstruct.annotationProcessors",
+                listOf("mapstruct.processor", "lombok.mapstruct")
             )
         }
     }

@@ -3,27 +3,16 @@ package com.example.employeeservice.mapper;
 import com.example.employeeservice.entity.EmployeeEntity;
 import com.example.employeeservice.model.Employee;
 import java.util.UUID;
-import org.springframework.stereotype.Component;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
-@Component
-public class EmployeeMapper implements ModelEntityMapper<Employee, EmployeeEntity> {
+@Mapper(componentModel = "spring")
+public interface EmployeeMapper extends ModelEntityMapper<Employee, EmployeeEntity> {
 
-  public Employee toModel(EmployeeEntity entity) {
-    return Employee.builder()
-        .id(entity.getId())
-        .name(entity.getName())
-        .surname(entity.getSurname())
-        .position(entity.getPosition())
-        .build();
-  }
-
-  public EmployeeEntity toEntity(Employee model) {
-    return EmployeeEntity.builder()
-        .id(UUID.randomUUID())
-        .name(model.getName())
-        .surname(model.getSurname())
-        .position(model.getPosition())
-        .build();
+  @AfterMapping
+  default void generateEntityId(@MappingTarget EmployeeEntity entity) {
+    entity.setId(UUID.randomUUID());
   }
 
 }
