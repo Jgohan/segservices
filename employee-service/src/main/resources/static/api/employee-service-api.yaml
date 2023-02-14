@@ -156,7 +156,7 @@ components:
     Employee:
       type: object
       properties:
-        id: { type: string, format: uuid }
+        id: { type: string, format: uuid, nullable: true }
         name: { type: string }
         surname: { type: string }
         position: { type: string }

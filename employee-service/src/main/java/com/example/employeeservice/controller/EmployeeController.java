@@ -30,6 +30,7 @@ public class EmployeeController implements EmployeesApi {
   public ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
     var response = employeeService.createEmployee(newEmployee);
     log.info("Create employee - " + response.getBody());
+
     return response;
   }
 
@@ -52,6 +53,7 @@ public class EmployeeController implements EmployeesApi {
   ) {
     var response = employeeService.updateEmployee(id, updatedEmployee);
     log.info("Update employee - " + response.getBody());
+
     return response;
   }
 
@@ -59,6 +61,7 @@ public class EmployeeController implements EmployeesApi {
   public ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
     var response = employeeService.deleteEmployee(id);
     log.info("Delete employee - " + response.getBody());
+
     return response;
   }
 

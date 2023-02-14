@@ -1,15 +1,12 @@
 package com.example.employeeservice.service;
 
-import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
 
-import com.example.employeeservice.entity.EmployeeEntity;
-import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.model.Employee;
+import com.example.employeeservice.repository.EmployeeRepository;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,13 +23,16 @@ public class EmployeeService {
 
   @Transactional
   public ResponseEntity<String> createEmployee(Employee employee) {
-    employeeRepository.save(employeeMapper.toEntity(employee));
+    var employeeToCreate = employeeMapper.toEntity(employee);
+    employeeRepository.save(employeeToCreate);
+
     return new ResponseEntity<>("Employee created", HttpStatus.CREATED);
   }
 
   public ResponseEntity<List<Employee>> getEmployees() {
-    var employees = StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
-        .map(employeeMapper::toModel).collect(Collectors.toList());
+    var employees = employeeRepository.findAll().stream()
+        .map(employeeMapper::toModel)
+        .collect(toList());
 
     if (employees.isEmpty()) {
       return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -43,7 +43,10 @@ public class EmployeeService {
 
   public ResponseEntity<Employee> getEmployee(UUID id) {
     return employeeRepository.findById(id)
-        .map(entity -> new ResponseEntity<>(employeeMapper.toModel(entity), HttpStatus.OK))
+        .map(entity -> {
+          var employee = employeeMapper.toModel(entity);
+          return new ResponseEntity<>(employee, HttpStatus.OK);
+        })
         .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
   }
 
@@ -52,46 +55,26 @@ public class EmployeeService {
       UUID id,
       Employee updatedEmployee
   ) {
-    return employeeRepository.findById(id)
-        .map(entity -> {
-          employeeRepository.save(updateEntityFromModel(entity, updatedEmployee));
-          return new ResponseEntity<>("Employee " + id + " was updated", HttpStatus.OK);
-        })
-        .orElseGet(() ->
-            new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT)
-        );
+    if (employeeRepository.notExistsById(id)) {
+      return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
+    }
+
+    var updatedEntity = employeeMapper.toEntity(updatedEmployee);
+    updatedEntity.setId(id);
+
+    employeeRepository.save(updatedEntity);
+
+    return new ResponseEntity<>("Employee " + id + " was updated", HttpStatus.OK);
   }
 
   @Transactional
   public ResponseEntity<String> deleteEmployee(UUID id) {
-    if (employeeRepository.existsById(id)) {
-      employeeRepository.deleteById(id);
-      return new ResponseEntity<>("Employee " + id + " was deleted", HttpStatus.OK);
+    if (employeeRepository.notExistsById(id)) {
+      return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
     }
 
-    return new ResponseEntity<>("Employee " + id + " wasn't found", HttpStatus.CONFLICT);
-  }
-
-  private EmployeeEntity updateEntityFromModel(
-      EmployeeEntity entity,
-      Employee model
-  ) {
-    var name = model.getName();
-    if (nonNull(name)) {
-      entity.setName(name);
-    }
-
-    var surname = model.getSurname();
-    if (nonNull(surname)) {
-      entity.setSurname(surname);
-    }
-
-    var position = model.getPosition();
-    if (nonNull(surname)) {
-      entity.setPosition(position);
-    }
-
-    return entity;
+    employeeRepository.deleteById(id);
+    return new ResponseEntity<>("Employee " + id + " was deleted", HttpStatus.OK);
   }
 
 }
