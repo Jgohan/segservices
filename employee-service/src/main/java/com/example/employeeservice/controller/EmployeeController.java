@@ -1,5 +1,6 @@
 package com.example.employeeservice.controller;
 
+import com.example.employeeservice.api.EmployeesApi;
 import com.example.employeeservice.model.Employee;
 import com.example.employeeservice.service.EmployeeService;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employees")
 @RequiredArgsConstructor
 @Slf4j
-public class EmployeeController {
+public class EmployeeController implements EmployeesApi {
 
   private final EmployeeService employeeService;
 
@@ -29,6 +30,7 @@ public class EmployeeController {
   public ResponseEntity<String> createEmployee(@RequestBody Employee newEmployee) {
     var response = employeeService.createEmployee(newEmployee);
     log.info("Create employee - " + response.getBody());
+
     return response;
   }
 
@@ -51,6 +53,7 @@ public class EmployeeController {
   ) {
     var response = employeeService.updateEmployee(id, updatedEmployee);
     log.info("Update employee - " + response.getBody());
+
     return response;
   }
 
@@ -58,6 +61,7 @@ public class EmployeeController {
   public ResponseEntity<String> deleteEmployee(@PathVariable UUID id) {
     var response = employeeService.deleteEmployee(id);
     log.info("Delete employee - " + response.getBody());
+
     return response;
   }
 
